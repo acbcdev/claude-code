@@ -1,0 +1,8 @@
+{
+  "name": "git-master",
+  "description": "A plugin for managing Git repositories",
+  "version": "1.0.0",
+  "author": {
+    "name": "acbc"
+  }
+}
