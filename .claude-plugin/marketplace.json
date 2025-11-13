@@ -1,0 +1,23 @@
+{
+  "name": "acbc-code",
+  "owner": {
+    "name": "acbc-code"
+  },
+  "source": {
+    "source": "github",
+    "repo": "acbcdev/claude-code"
+  },
+  "plugins": [
+    {
+      "name": "git-master",
+      "source": {},
+      "description": "Git plugin",
+      "agents": [
+        "./git-master/agents/commit-generator.md",
+        "./git-master/agents/git-branch-manager.md",
+        "./git-master/agents/changelog-manager.md"
+      ],
+      "commands": ["./git-master/commands/commit.md"]
+    }
+  ]
+}
