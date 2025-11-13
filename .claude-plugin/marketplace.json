@@ -1,12 +1,17 @@
 {
   "name": "acbc-code",
   "owner": {
-    "name": "acbc-code"
+    "name": "acbc",
+    "email": "acbc.dev@gmail.com",
+    "url": "https://acbc.dev"
   },
   "plugins": [
     {
       "name": "git-master",
-      "description": "Git plugin ",
+      "description": "Git plugin For managing git repositories Changelog",
+      "keywords": ["git", "changelog", "version", "release"],
+      "license": "MIT",
+      "author": { "name": "acbcdev" },
       "source": {
         "source": "github",
         "repo": "acbcdev/claude-code"
