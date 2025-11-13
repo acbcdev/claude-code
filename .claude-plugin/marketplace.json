@@ -3,24 +3,20 @@
   "owner": {
     "name": "acbc-code"
   },
-  "source": {
-    "source": "url",
-    "repo": "https://github.com/acbcdev/claude-code.git"
-  },
   "plugins": [
     {
       "name": "git-master",
       "description": "Git plugin ",
+      "source": {
+        "source": "github",
+        "repo": "acbcdev/claude-code"
+      },
       "agents": [
         "./git-master/agents/commit-generator.md",
         "./git-master/agents/git-branch-manager.md",
         "./git-master/agents/changelog-manager.md"
       ],
-      "commands": ["./git-master/commands/commit.md"],
-      "source": {
-        "source": "url",
-        "repo": "https://github.com/acbcdev/claude-code.git"
-      }
+      "commands": ["./git-master/commands/commit.md"]
     }
   ]
 }
