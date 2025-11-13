@@ -4,8 +4,8 @@
     "name": "acbc-code"
   },
   "source": {
-    "source": "github",
-    "repo": "acbcdev/claude-code"
+    "source": "url",
+    "repo": "https://github.com/acbcdev/claude-code.git"
   },
   "plugins": [
     {
