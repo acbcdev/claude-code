@@ -1,23 +1,23 @@
 # acbc plugins
 
-
 ## Installation
 
 ```bash
-/plugin marketplace add https://github.com/acbcdev/claude-code.git
+/plugin marketplace add acbcdev/claude-code
 ```
 
 ## plugins
 
 ### git-master
+
 Professional Git management with agents and commands for commit generation, branch operations, and changelog management.
 
-| Type | Name | Description |
-|------|------|-------------|
-| Agent | commit-generator | Generates properly formatted commit messages following Conventional Commits |
-| Agent | git-branch-manager | Safely create, rename, and delete Git branches with validation |
-| Agent | changelog-manager | Maintains CHANGELOG.md files following Keep a Changelog standards |
-| Command | commit | Create git commits with proper message formatting |
+| Type    | Name               | Description                                                                 |
+| ------- | ------------------ | --------------------------------------------------------------------------- |
+| Agent   | commit-generator   | Generates properly formatted commit messages following Conventional Commits |
+| Agent   | git-branch-manager | Safely create, rename, and delete Git branches with validation              |
+| Agent   | changelog-manager  | Maintains CHANGELOG.md files following Keep a Changelog standards           |
+| Command | commit             | Create git commits with proper message formatting                           |
 
 ## coming soon
 
