@@ -5,6 +5,10 @@
     "email": "acbc.dev@gmail.com",
     "url": "https://acbc.dev"
   },
+  "metadata": {
+    "description": "A collection of plugins for Claude",
+    "version": "0.1.1"
+  },
   "plugins": [
     {
       "name": "git-master",
@@ -13,6 +17,10 @@
       "keywords": ["git", "changelog", "version", "release"],
       "license": "MIT",
       "author": { "name": "acbcdev" },
+      "category": "git",
+      "strict": false,
+
+      "repository": "https://github.com/acbcdev/claude-code",
       "source": {
         "source": "github",
         "repo": "acbcdev/claude-code"
