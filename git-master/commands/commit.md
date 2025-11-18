@@ -12,6 +12,7 @@ Use the @agent-commit-generator to create commits grouped according to your stra
 3. Generate individual commit messages for each group
 4. Each commit message reflects only the changes in that specific group
 5. Review and apply the generated commits
+6. Make the commit messages clear and concise, summarizing the changes effectively according to the grouping strategy never using co-author information.
 
 **Important:** Never include co-author information in commit messages.
 
