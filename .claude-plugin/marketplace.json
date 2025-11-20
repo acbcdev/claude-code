@@ -31,8 +31,7 @@
         "./git-master/agents/changelog-manager.md"
       ],
       "commands": [
-        "./git-master/commands/commit.md",
-        "./git-master/commands/re-commit.md"
+        "./git-master/commands/commit.md"
       ]
     }
   ]
