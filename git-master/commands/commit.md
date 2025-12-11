@@ -1,5 +1,5 @@
 ---
-argument-hint: grouping strategy (by files, by features, by modules, etc.)
+argument-hint: grouping strategy (files, features, modules, etc.)
 description: Generate git commits grouped by specified strategy
 ---
 
@@ -9,16 +9,16 @@ Use the @agent-commit-generator to create commits grouped according to your stra
 
 **Grouping examples:**
 
-default strategy is `by files`
+default strategy is `files`
 
-- `by files` - one commit per each file
-- `by features` - one commit per each feature touched across files
-- `by domain` - group by each business domain (auth, payments, etc.)
-- `by modules` - organize by each code module or component
+- `files` - one commit per each file
+- `features` - one commit per each feature touched across files
+- `domain` - group by each business domain (auth, payments, etc.)
+- `modules` - organize by each code module or component
 
 **Process:**
 
-1. Specify in $ARGUMENTS how to group changes: "by files", "by features", "by modules", "by domain", etc.
+1. Specify in $ARGUMENTS how to group changes: "files", "features", "modules", "domain", etc.
 2. The agent analyzes staged changes and groups them according to your strategy
 3. Generate individual commit messages for each group
 4. Each commit message reflects only the changes in that specific group
