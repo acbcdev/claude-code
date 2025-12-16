@@ -42,7 +42,7 @@ if git rev-parse --git-dir >/dev/null 2>&1; then
   if [ -n "$BRANCH" ]; then
     # Get added/removed lines from git diff
     DIFF_STAT=$(git diff --numstat 2>/dev/null | awk '{add+=$1; del+=$2} END {printf "+%d,-%d", add+0, del+0}')
-    GIT_INFO=" | $BRANCH | ($DIFF_STAT)"
+    GIT_INFO=" | $BRANCH "#| ($DIFF_STAT)"
   fi
 else
   GIT_INFO=" | no repo"
