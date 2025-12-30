@@ -26,12 +26,12 @@
         "repo": "acbcdev/claude-code"
       },
       "agents": [
-        "./git-master/agents/commit-generator.md",
-        "./git-master/agents/git-branch-manager.md",
-        "./git-master/agents/changelog-manager.md"
+        "./agents/commit-generator.md",
+        "./agents/git-branch-manager.md",
+        "./agents/changelog-manager.md"
       ],
-      "commands": ["./git-master/commands/commit.md"],
-      "skills": ["./git-master/skills/commiter.md"]
+      "commands": ["./commands/commit.md"],
+      "skills": ["./skills/commiter"]
     }
   ]
 }
