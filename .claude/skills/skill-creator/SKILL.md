@@ -59,7 +59,7 @@ Executable code (Python/Bash/etc.) for tasks that require deterministic reliabil
 Documentation and reference material intended to be loaded as needed into context to inform Claude's process and thinking.
 
 - **When to include**: For documentation that Claude should reference while working
-- **Examples**: `references/finance.md` for financial schemas, `references/mnda.md` for company NDA template, `references/policies.md` for company policies, `references/api_docs.md` for API specifications
+- **Examples**: `[references/finance.md](references/finance.md)` for financial schemas, `[references/mnda.md](references/mnda.md)` for company NDA template, `[references/policies.md](references/policies.md)` for company policies, `[references/api_docs.md](references/api_docs.md)` for API specifications
 - **Use cases**: Database schemas, API documentation, domain knowledge, company policies, detailed workflow guides
 - **Benefits**: Keeps SKILL.md lean, loaded only when Claude determines it's needed
 - **Best practice**: If files are large (>10k words), include grep search patterns in SKILL.md
@@ -80,9 +80,9 @@ Skills use a three-level loading system to manage context efficiently:
 
 1. **Metadata (name + description)** - Always in context (~100 words)
 2. **SKILL.md body** - When skill triggers (<5k words)
-3. **Bundled resources** - As needed by Claude (Unlimited*)
+3. **Bundled resources** - As needed by Claude (Unlimited\*)
 
-*Unlimited because scripts can be executed without reading into context window.
+\*Unlimited because scripts can be executed without reading into context window.
 
 ## Skill Creation Process
 
@@ -189,6 +189,7 @@ scripts/package_skill.py <path/to/skill-folder> ./dist
 The packaging script will:
 
 1. **Validate** the skill automatically, checking:
+
    - YAML frontmatter format and required fields
    - Skill naming conventions and directory structure
    - Description completeness and quality
@@ -203,6 +204,7 @@ If validation fails, the script will report the errors and exit without creating
 After testing the skill, users may request improvements. Often this happens right after using the skill, with fresh context of how the skill performed.
 
 **Iteration workflow:**
+
 1. Use the skill on real tasks
 2. Notice struggles or inefficiencies
 3. Identify how SKILL.md or bundled resources should be updated
