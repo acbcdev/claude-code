@@ -13,7 +13,7 @@
     {
       "name": "git-master",
       "description": "Git plugin For managing git repositories Changelog",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "keywords": ["git", "changelog", "version", "release"],
       "license": "MIT",
       "author": { "name": "acbcdev" },
