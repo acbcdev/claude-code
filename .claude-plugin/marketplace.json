@@ -32,6 +32,18 @@
       ],
       "commands": ["./commands/commit.md"],
       "skills": ["./skills/commiter/"]
+    },
+    {
+      "name": "coder",
+      "description": "Coder plugin For analyzing code quality and suggesting improvements",
+      "version": "1.0.0",
+      "keywords": ["coder", "code quality", "suggestions"],
+      "license": "MIT",
+      "author": { "name": "acbcdev" },
+      "category": "coder style analyzer",
+      "strict": false,
+      "repository": "https://github.com/acbcdev/claude-code",
+      "skills": ["./skills/coder/"]
     }
   ]
 }
