@@ -11,175 +11,88 @@ This guide complements the main code-style skill with JavaScript and TypeScript-
 
 ## Variable Declarations
 
-### Prefer `const` Over `let` Over `var`
-
-Use `const` by default. Use `let` when you need to reassign. Never use `var`.
-
-**Why:**
-- `const` prevents accidental reassignment
-- `const` signals intent: "this won't change"
-- Block scoping (let/const) prevents scope leakage (var's flaw)
-- `const` doesn't prevent object/array mutation; it prevents rebinding
-
-**Examples:**
-
-```javascript
-// Good: const for objects/arrays that won't be reassigned
-const user = { name: 'Alice' };
-user.name = 'Bob'; // OK - mutation is fine
-
-// Good: const for primitives
-const MAX_RETRIES = 3;
-const apiUrl = 'https://api.example.com';
-
-// Acceptable: let when reassignment is needed
-let attempt = 0;
-while (attempt < MAX_RETRIES) {
-  attempt++;
-}
-
-// Bad: var creates scope confusion
-var count = 0; // Don't do this
-```
+Use `const` by default, `let` for reassignment, never `var`.
 
 ---
 
 ## Modern Syntax & Features
 
-### Prefer Arrow Functions for Anonymous Functions
+### Arrow Functions for Anonymous Functions
 
-Arrow functions are concise and have consistent `this` binding.
-
-**Examples:**
+Use arrow functions for callbacks; use named functions for exports or recursion.
 
 ```javascript
-// Good: arrow functions
-const numbers = [1, 2, 3];
-const doubled = numbers.map(n => n * 2);
-const filtered = numbers.filter(n => n > 1);
+const doubled = numbers.map(n => n * 2);        // Good: arrow
+const filtered = numbers.filter(n => n > 1);    // Good: arrow
 
-// Good: named functions for named exports or recursive functions
-function calculateFactorial(n) {
-  return n <= 1 ? 1 : n * calculateFactorial(n - 1);
+function factorial(n) {                          // Good: named for recursion
+  return n <= 1 ? 1 : n * factorial(n - 1);
 }
 
-// Bad: traditional anonymous function syntax
-const doubled = numbers.map(function(n) { return n * 2; });
-
-// Watch out: arrow functions and this binding
-const person = {
-  name: 'Alice',
-  greet: () => console.log(this.name), // 'this' is wrong - don't use arrow here
-  greetRight: function() { console.log(this.name); } // correct
+// Watch: arrow functions don't bind 'this' correctly in methods
+const obj = {
+  greet: () => console.log(this.name),           // Bad: wrong 'this'
+  greetRight: function() { console.log(this); }  // Good: correct 'this'
 };
 ```
 
-### Use Template Literals Over String Concatenation
-
-Template literals are clearer and prevent concatenation errors.
-
-**Examples:**
+### Template Literals Over String Concatenation
 
 ```javascript
-// Good: template literals
-const greeting = `Hello, ${name}!`;
-const multiLine = `
-  First line
-  Second line
-`;
-const html = `<div class="${className}">${content}</div>`;
+const greeting = `Hello, ${name}!`;                                    // Good
+const url = `https://api.example.com/users/${userId}`;                 // Good
+const multiLine = `Line 1\nLine 2`;                                    // Good
 
-// Bad: string concatenation
-const greeting = 'Hello, ' + name + '!';
-const html = '<div class="' + className + '">' + content + '</div>';
-
-// Bad: mixing quotes in concatenation
-const url = 'https://api.example.com/users/' + userId;
-
-// Good: template literal
-const url = `https://api.example.com/users/${userId}`;
+const badGreeting = 'Hello, ' + name + '!';                            // Bad: concatenation
+const badUrl = 'https://api.example.com/users/' + userId;              // Bad: concatenation
 ```
 
-### Destructuring for Function Parameters and Objects
-
-Destructuring reduces variable declarations and makes function signatures clearer.
-
-**Examples:**
+### Destructuring
 
 ```javascript
-// Good: object destructuring in parameters
+// Good: destructuring in parameters
 function renderUser({ name, email, isActive }) {
   if (!isActive) return null;
   return `${name} (${email})`;
 }
 
-// Good: array destructuring for known positions
+// Good: array destructuring
 const [first, second] = getCoordinates();
 
-// Good: default values with destructuring
-function fetchUser({ id = 1, includeProfile = false } = {}) {
-  // ...
-}
+// Good: default values
+function fetchUser({ id = 1 } = {}) { }
 
-// Avoid: unnecessary destructuring
-// Bad: destructuring then immediately reassigning
-const { x } = point;
-const { y } = point; // extract separately only if you'll use each one differently
-
-// Good: destructure only what you use
-const { id, name } = user; // keep email if you don't use it
-```
-
-**Exception:** Avoid destructuring in the loop header for clarity:
-
-```javascript
-// Less clear
-for (const { id, name } of users) { }
-
-// Clearer - destructure in the body if complex
+// In loops, destructure in body for clarity:
 for (const user of users) {
-  const { id, name } = user;
+  const { id, name } = user;  // Good: readable
 }
 ```
 
-### Use Array Methods Over Loops
-
-`map()`, `filter()`, `reduce()`, and others express intent better than for/while loops.
-
-**Examples:**
+### Array Methods Over Loops
 
 ```javascript
-// Good: array methods
-const numbers = [1, 2, 3, 4, 5];
-const doubled = numbers.map(n => n * 2);
-const evens = numbers.filter(n => n % 2 === 0);
-const sum = numbers.reduce((acc, n) => acc + n, 0);
+const doubled = numbers.map(n => n * 2);          // Good: declarative
+const evens = numbers.filter(n => n % 2 === 0);   // Good: intent clear
+const sum = numbers.reduce((acc, n) => acc + n);  // Good: reduce
 
-// OK: for loop when you need early exit
-let found = null;
+// OK: for loop with early exit
 for (const user of users) {
   if (user.id === targetId) {
     found = user;
-    break; // early exit is OK
+    break;
   }
 }
 
-// Bad: for loop for simple transformations
+// Bad: for loop for transformation
 const doubled = [];
-for (let i = 0; i < numbers.length; i++) {
-  doubled.push(numbers[i] * 2);
-}
+for (let i = 0; i < numbers.length; i++) doubled.push(numbers[i] * 2);
 ```
 
 ---
 
 ## Asynchronous Code
 
-### Prefer `async`/`await` Over Promises
-
-`async`/`await` reads linearly and reduces callback/promise nesting.
-
-**Examples:**
+### `async`/`await` Over Promises
 
 ```javascript
 // Good: async/await
@@ -189,58 +102,44 @@ async function fetchAndProcess(userId) {
     const posts = await api.getPosts(user.id);
     return { user, posts };
   } catch (error) {
-    logger.error('Failed to fetch:', error);
+    logger.error('Failed:', error);
     throw error;
   }
 }
 
-// OK: Promises when you need multiple concurrent requests
-async function getParallelData(ids) {
-  const results = await Promise.all(
-    ids.map(id => api.fetch(id))
-  );
-  return results;
-}
+// Good: Promise.all for concurrency
+const results = await Promise.all(ids.map(id => api.fetch(id)));
 
 // Bad: promise chains
 api.getUser(userId)
-  .then(user => api.getPosts(user.id)
-    .then(posts => ({ user, posts }))
-  )
+  .then(user => api.getPosts(user.id).then(posts => ({ user, posts })))
   .catch(error => logger.error(error));
 ```
 
-### Error Handling in Async Functions
-
-Always handle errors in async functions. Use try/catch at appropriate levels.
-
-**Examples:**
+### Error Handling in Async
 
 ```javascript
-// Good: catch at the point of awareness
+// Good: catch and handle or rethrow
 async function saveUser(user) {
   try {
     await db.save(user);
   } catch (error) {
-    if (error.code === 'DUPLICATE_KEY') {
-      throw new UserAlreadyExistsError(user.id);
-    }
-    throw error; // re-throw if you can't handle it
+    if (error.code === 'DUPLICATE_KEY') throw new UserAlreadyExistsError(user.id);
+    throw error;
   }
 }
 
-// Good: let errors propagate to higher-level handlers
+// Good: let errors propagate
 async function processUsers(users) {
   return Promise.all(users.map(u => saveUser(u)));
-  // errors propagate to caller
 }
 
-// Bad: catching errors you can't handle
+// Bad: silent failures
 async function getUser(id) {
   try {
     return await api.getUser(id);
   } catch (error) {
-    // silently failing
+    // silently fails - DON'T DO THIS
   }
 }
 ```
@@ -249,11 +148,7 @@ async function getUser(id) {
 
 ## Conditional Statements
 
-### Avoid Else Statements - Use Guard Clauses
-
-Guard clauses (early returns) are clearer than nested if/else.
-
-**Examples:**
+### Guard Clauses Over Else
 
 ```javascript
 // Good: guard clauses
@@ -264,57 +159,32 @@ function validateUser(user) {
   return true;
 }
 
-// Good: single guard clause when appropriate
+// Good: guard clause
 function processOrder(order) {
-  if (!order.isValid()) {
-    throw new ValidationError('Invalid order');
-  }
-  // ... rest of happy path
+  if (!order.isValid()) throw new ValidationError('Invalid order');
+  // happy path continues
 }
 
 // Bad: nested if/else
 function validateUser(user) {
   if (user) {
     if (user.email) {
-      if (user.isActive) {
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      return false;
-    }
-  } else {
-    return false;
-  }
+      if (user.isActive) return true;
+      else return false;
+    } else return false;
+  } else return false;
 }
-
-// Bad: else when not needed
-if (condition) {
-  doThis();
-} else {
-  doThat();
-}
-// Better (if both don't need to happen):
-if (condition) return doThis();
-doThat();
 ```
 
-### Use Ternary Operator for Simple Conditions
-
-Ternary is good for inline decisions; avoid nested ternaries.
-
-**Examples:**
+### Ternary for Simple Conditions
 
 ```javascript
-// Good: simple ternary
-const status = isActive ? 'active' : 'inactive';
-const message = count > 0 ? `${count} items` : 'No items';
+const status = isActive ? 'active' : 'inactive';        // Good: simple
+const message = count > 0 ? `${count} items` : 'empty'; // Good: simple
 
-// Bad: nested ternary (hard to read)
-const status = isActive ? (isPremium ? 'premium' : 'active') : 'inactive';
+const bad = isActive ? (isPremium ? 'premium' : 'active') : 'inactive';  // Bad: nested
 
-// Better: use if statement or extract to function
+// Better: use function for complex logic
 function getStatus(isActive, isPremium) {
   if (!isActive) return 'inactive';
   return isPremium ? 'premium' : 'active';
@@ -327,43 +197,27 @@ function getStatus(isActive, isPremium) {
 
 ### Avoid `any` Type
 
-`any` defeats TypeScript's type safety. Use specific types or `unknown`.
-
-**Examples:**
-
 ```typescript
 // Bad: any
-function process(data: any) {
-  return data.value + 1;
-}
+function process(data: any) { return data.value + 1; }
 
 // Good: specific type
-interface DataPoint {
-  value: number;
-}
-function process(data: DataPoint) {
-  return data.value + 1;
-}
+interface DataPoint { value: number; }
+function process(data: DataPoint) { return data.value + 1; }
 
-// Good: generic when the type is truly flexible
-function process<T>(data: T): T {
-  return data;
-}
+// Good: generic
+function identity<T>(data: T): T { return data; }
 
-// Acceptable: unknown with type guards
+// Acceptable: unknown with type guard
 function process(data: unknown) {
-  if (typeof data === 'object' && data !== null && 'value' in data) {
+  if (typeof data === 'object' && 'value' in data) {
     return (data as { value: number }).value;
   }
-  throw new Error('Invalid data');
+  throw new Error('Invalid');
 }
 ```
 
-### Use Interfaces for Object Contracts
-
-Interfaces define clear contracts. Use `extends` for inheritance, composition for flexibility.
-
-**Examples:**
+### Interfaces for Object Contracts
 
 ```typescript
 // Good: clear interface
@@ -374,161 +228,120 @@ interface User {
   isActive: boolean;
 }
 
-// Good: interface composition
-interface AdminUser extends User {
-  permissions: Permission[];
-}
+// Good: composition
+interface AdminUser extends User { permissions: Permission[]; }
 
-// Good: generic interface for reusability
+// Good: generic
 interface ApiResponse<T> {
   data: T;
   status: number;
   error?: string;
 }
 
-// Avoid: overly generic interface
-interface Data {
-  [key: string]: any; // defeats type safety
-}
+// Bad: overly generic
+interface Data { [key: string]: any; }
 ```
 
-### Use Type Annotations Sparingly
-
-Let TypeScript infer types when obvious. Annotate at boundaries.
-
-**Examples:**
+### Type Annotations Sparingly
 
 ```typescript
-// Good: inferred types (obvious)
-const count = 0; // TypeScript infers number
-const name = 'Alice'; // TypeScript infers string
-const users = []; // Infer from usage
+// Good: inferred (obvious)
+const count = 0;              // inferred as number
+const name = 'Alice';         // inferred as string
 
-// Good: annotate function parameters and returns
+// Good: annotate function boundaries
 function calculateTotal(items: CartItem[]): number {
   return items.reduce((sum, item) => sum + item.price, 0);
 }
 
-// Good: annotate at external boundaries
+// Good: annotate external boundaries
 const response: ApiResponse<User> = await fetch(url);
 
 // Avoid: unnecessary annotations
-const count: number = 0; // number is obvious
-const name: string = 'Alice'; // string is obvious
+const count: number = 0;      // redundant
+const name: string = 'Alice'; // redundant
 ```
 
 ---
 
 ## Module Organization
 
-### Clear Import/Export Practices
-
-Organize imports by source (external, internal, types). Use named exports for clarity.
-
-**Examples:**
+### Import/Export Organization
 
 ```typescript
-// Good: organized imports
+// Good: organized by source
 import express, { Router } from 'express';
 import { v4 as uuid } from 'uuid';
 
 import { UserRepository } from './repositories/UserRepository';
-import { validateEmail } from './utils/validation';
 import type { User, ApiResponse } from './types';
 
-// Good: named exports for clear API
+// Good: named exports
 export function createUser(data: UserData): User { }
 export function deleteUser(id: string): Promise<void> { }
 
-// Acceptable: default export for single main export
+// Acceptable: default export
 export default UserService;
 
-// Avoid: mixing many unnamed exports
-module.exports = {
-  a: funcA,
-  b: funcB, // unclear API
-};
+// Avoid: unclear exports
+module.exports = { a: funcA, b: funcB };
 
-// Avoid: wildcard imports unless aliased
-import * as utils from './utils'; // OK with alias
-import * from './utils'; // avoid - unclear what's available
+// Avoid: wildcard without alias
+import * from './utils'; // Unclear what's available
+import * as utils from './utils'; // Better with alias
 ```
 
 ---
 
 ## Common Pitfalls
 
-### 1. Boolean Parameter Flag Anti-Pattern
-
-Boolean parameters create multiple code paths and are confusing.
+### Boolean Parameters
 
 ```typescript
-// Bad: boolean parameter creates branches
+// Bad: flag parameter
 function sendNotification(user: User, isEmail: boolean) {
-  if (isEmail) {
-    sendEmailNotification(user);
-  } else {
-    sendSmsNotification(user);
-  }
+  if (isEmail) sendEmailNotification(user);
+  else sendSmsNotification(user);
 }
 
-// Better: separate specific functions
+// Good: separate functions
 function sendEmailNotification(user: User) { }
 function sendSmsNotification(user: User) { }
-
-// Use: let caller choose which to call
 ```
 
-### 2. Magic Strings/Numbers
-
-Extract configuration values to named constants.
+### Magic Values
 
 ```typescript
-// Bad: magic numbers scattered
-if (retries > 3) { } // what is 3?
-const delay = 5000; // what time unit?
+if (retries > 3) { }              // Bad: magic number
+const delay = 5000;                // Bad: unclear unit
 
-// Good: named constants
-const MAX_RETRIES = 3;
-const RETRY_DELAY_MS = 5000;
-if (retries > MAX_RETRIES) { }
+const MAX_RETRIES = 3;             // Good: named
+const RETRY_DELAY_MS = 5000;       // Good: unit specified
 ```
 
-### 3. Silent Errors
-
-Never silently catch errors without handling or logging.
+### Silent Errors
 
 ```typescript
-// Bad: silent failure
+try { await saveUser(user); } catch (error) { }  // Bad: silent
+
 try {
   await saveUser(user);
 } catch (error) {
-  // oops, user wasn't saved
-}
-
-// Good: handle or log
-try {
-  await saveUser(user);
-} catch (error) {
-  logger.error('Failed to save user:', error);
-  throw error; // or handle specifically
+  logger.error('Failed:', error);  // Good: log or rethrow
+  throw error;
 }
 ```
 
-### 4. Side Effects in Selectors/Getters
-
-Functions that look like accessors shouldn't have side effects.
+### Side Effects in Getters
 
 ```typescript
-// Bad: getter with side effect
 get user() {
-  analytics.track('user accessed'); // side effect!
+  analytics.track('accessed');  // Bad: side effect in getter
   return this._user;
 }
 
-// Good: explicit function for side-effect code
-function getUserWithTracking() {
-  analytics.track('user accessed');
+function getUserWithTracking() {  // Good: explicit function
+  analytics.track('accessed');
   return this._user;
 }
 ```
@@ -537,11 +350,8 @@ function getUserWithTracking() {
 
 ## Summary
 
-Modern JavaScript/TypeScript code is:
-- **Declarative:** Use array methods, async/await, destructuring
-- **Clear:** Guard clauses over nested conditions, explicit function names
-- **Typed:** (TypeScript) Use specific types, avoid `any`
-- **Composable:** Small functions with single purpose
-- **Functional:** Prefer pure functions, immutable data when possible
-
-Remember: JavaScript evolved rapidly. These guidelines reflect 2025 best practices using ES2020+ features.
+Modern JavaScript/TypeScript is declarative, typed, and composable:
+- Use array methods, async/await, destructuring
+- Guard clauses, early returns, clear names
+- Specific types, avoid `any`
+- Small, focused functions

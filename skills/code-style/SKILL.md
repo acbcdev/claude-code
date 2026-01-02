@@ -27,58 +27,47 @@ These five principles form the foundation of good object-oriented design and app
 
 #### S - Single Responsibility Principle
 
-A class or function should have one reason to change—it should do one thing and do it well.
+A class or function should do one thing and have one reason to change.
 
-**Apply by:**
-- Extract a new function when your function description includes "and"
-- Separate concerns: business logic, data access, presentation should be in different modules
-- If a class/function exceeds 100-150 lines, it likely has multiple responsibilities
-
-**Avoid:** God objects/functions that handle multiple unrelated concerns. This makes testing, reuse, and modification difficult.
+- Extract when description includes "and"
+- Keep functions under 100 lines; classes under 300 lines
+- Separate concerns: business logic, data access, presentation
 
 #### O - Open/Closed Principle
 
-Software should be open for extension but closed for modification. Existing code shouldn't change when adding new features.
+Open for extension, closed for modification. Add features without changing existing code.
 
-**Apply by:**
-- Use abstraction (interfaces, base classes, abstract classes) to define contracts
-- Allow behavior to be extended through inheritance or composition
-- Use polymorphism to handle variations without modifying existing code
+- Use abstractions (interfaces, base classes) to define contracts
+- Extend via inheritance or composition
 
-**Avoid:** Making breaking changes to existing code every time a new feature is needed. This introduces bugs and breaks existing clients.
+**Avoid:** Breaking changes to existing code when adding features.
 
 #### L - Liskov Substitution Principle
 
-Derived classes must be substitutable for their base classes without breaking the application.
+Child classes must be substitutable for parent classes without breaking behavior.
 
-**Apply by:**
-- Honor the contract defined by base classes/interfaces
-- Child classes should strengthen invariants, not weaken them
-- Avoid surprising behavior overrides that violate expectations
+- Honor parent class contracts
+- Strengthen invariants, don't weaken them
 
-**Avoid:** Subclasses that break the parent's interface contract or behave unexpectedly compared to their parent.
+**Avoid:** Subclasses that break the parent's contract or behave unexpectedly.
 
 #### I - Interface Segregation Principle
 
-Clients should not be forced to depend on interfaces they don't use. Keep interfaces small and focused.
+Keep interfaces small and focused. Don't force clients to implement unused methods.
 
-**Apply by:**
 - Split large interfaces into smaller, purpose-specific ones
-- Classes should implement only the methods they actually need
-- Prefer many specific contracts over one general contract
+- Implement only what you need
 
-**Avoid:** Fat interfaces that force implementing classes to have empty or unused method implementations.
+**Avoid:** Fat interfaces with unused implementations.
 
 #### D - Dependency Inversion Principle
 
-Depend on abstractions, not concrete implementations. High-level modules shouldn't depend on low-level modules.
+Depend on abstractions, not concrete implementations.
 
-**Apply by:**
 - Inject dependencies rather than creating them internally
-- Program against interfaces/abstractions, not concrete classes
-- Use dependency injection containers to manage dependencies
+- Program against interfaces, not concrete classes
 
-**Avoid:** Hard-coding dependencies on concrete classes, which makes code rigid and hard to test.
+**Avoid:** Hard-coded dependencies on concrete classes.
 
 ---
 
@@ -88,50 +77,37 @@ Beyond SOLID, these practices improve code readability, maintainability, and tea
 
 ### Readability & Naming
 
-Clear naming is the cornerstone of readable code. Names should reveal intent and eliminate ambiguity.
+Names should reveal intent and be searchable.
 
-**Guidelines:**
-- **Function names:** Use verbs that describe what the function does (calculateTotal, fetchUserById, validateEmail)
-- **Variable names:** Use nouns that describe what the data represents (userProfile, orderTotal, isActive)
-- **Boolean names:** Phrase as questions to make them self-documenting (isValid, hasPermission, shouldCache, canDelete)
-- **Avoid abbreviations:** Unless they're universally known (HTTP, API, ID). "usr" is unclear; "user" is clear
-- **Meaningful distinctions:** If you need userA and userB, the naming is too generic. Use currentUser and previousUser instead
-- **Use searchable names:** Choose names you can grep for; avoid magic values that appear in multiple contexts
+- **Functions:** Use verbs (calculateTotal, fetchUserById, validateEmail)
+- **Variables:** Use nouns (userProfile, orderTotal, isActive)
+- **Booleans:** Phrase as questions (isValid, hasPermission, shouldCache)
+- **Avoid abbreviations** unless universal (HTTP, API, ID)
+- **Avoid magic values:** Extract to named constants
 
 ### Single Responsibility (Function/Class Size)
 
-Smaller, focused units of code are easier to test, understand, and modify.
-
-**Guidelines:**
-- **Functions:** Aim for <20 lines; anything over 50 lines should prompt refactoring consideration
-- **Classes:** If a class exceeds 300-400 lines, split it into focused classes
-- **One level of abstraction:** Don't mix high-level and low-level details within the same function
-- **Extract complex logic:** If a section of code is hard to understand, extract it into a well-named helper function
-
-**Benefits:** Easier testing, reusability, and maintenance.
+- **Functions:** Aim for <20 lines; refactor if over 50
+- **Classes:** Split if over 300 lines
+- **One level of abstraction:** Don't mix high-level and low-level details
+- **Extract complex logic** into well-named helper functions
 
 ### DRY (Don't Repeat Yourself)
 
-Avoid code duplication to make updates easier and reduce bugs.
-
-**Guidelines:**
 - Extract repeated code into functions or modules
-- Use abstraction to capture similar patterns (base classes, shared utilities, templates)
-- Balance pragmatism: Don't over-DRY code that happens to look similar but serves unrelated purposes
-- Three-time rule: When you write the same code three times, extract it
+- Use abstraction for similar patterns (base classes, shared utilities)
+- Three-time rule: Extract when the same code appears three times
 
-**Trade-off:** Over-abstraction can make code harder to read. Only extract when duplication is truly redundant.
+**Avoid:** Over-abstraction that hides intent.
 
 ### Error Handling Patterns
 
-Proper error handling makes code robust and easier to debug.
+- **Fail fast:** Validate inputs at entry; catch problems early
+- **Specific errors:** Use specific error types with clear messages
+- **Handle at the right level:** Only catch what you can meaningfully handle
+- **Avoid silent failures:** Log or rethrow errors
 
-**Guidelines:**
-- **Fail fast:** Validate inputs at function entry; catch problems early before they propagate
-- **Specific errors:** Use specific error types and messages that indicate what went wrong and why
-- **Handle at the right level:** Only catch exceptions you can meaningfully handle; let others propagate
-- **Avoid silent failures:** Don't swallow errors without logging or rethrowing
-- **Prefer early returns:** Use guard clauses to reduce nesting and return early on error conditions
+**Avoid:** Swallowing exceptions without logging.
 
 ---
 
@@ -141,31 +117,22 @@ These practices apply regardless of programming language.
 
 ### Code Structure & Flow
 
-- **Avoid deeply nested code:** Aim for 2-3 levels max. Use guard clauses and early returns to flatten conditionals
-- **Avoid magic strings/numbers:** Extract literals into named constants that explain their purpose
-  - Bad: `if (age > 18)`
-  - Good: `const LEGAL_AGE = 18; if (age > LEGAL_AGE)`
-- **DO NOT use `else` statements unless necessary:** They create branching and nesting
-- **AVOID `else` statements:** Prefer guard clauses and early returns
-- **Prefer early returns:** Exit functions immediately when conditions aren't met, reducing indentation
-- **Keep functions focused:** Composable and reusable units are easier to test and maintain
-- **One reason to change:** If you need to modify a function for multiple reasons, extract smaller functions
+- **Limit nesting:** Aim for 2-3 levels max using guard clauses and early returns
+- **Extract magic values:** Use named constants instead of literals
+- **Avoid else statements:** Use early returns and guard clauses
+- **Keep functions focused:** One reason to change; single responsibility
 
 ### Naming & Clarity
 
-- **Use descriptive names that reveal intent:** A name should answer "why this exists", not just "what it does"
-- **PREFER single word variable names where possible:** But only if they're unambiguous (e.g., `user`, `total`, `status`)
-- **Balance brevity with clarity:** `temp` is too vague; `temperatureCelsius` is clear but long; `tempC` is reasonable
+- **Names reveal intent:** Not just "what" but "why"
+- **Single-word names:** OK if unambiguous (user, total, status)
+- **Balance brevity & clarity:** `temp` is vague; `tempC` or `temperature` is better
 
 ### Conditional Logic
 
-- **PREFER use negative programming to reduce conditionals:**
-  - Bad: `if (user.isActive) { doSomething(); }`
-  - Good: `if (!user.isActive) { return; } doSomething();`
-  - Negative logic eliminates nesting and makes error cases explicit
-- **Guard clauses:** Handle error/edge cases first, then process the happy path
-- **Reduce boolean flags:** If you're adding parameters to control behavior, consider extracting a separate function
-- **Avoid boolean parameters:** They create multiple execution paths; consider using specific function names instead
+- **Guard clauses:** Handle edge cases first; process happy path after
+- **Early returns:** Reduce nesting with `if (!condition) return;`
+- **Avoid boolean parameters:** Create separate functions instead of flag parameters
 
 ---
 
@@ -182,6 +149,7 @@ While these principles are universal, each language has idiomatic patterns and p
 ## Summary
 
 Good code is:
+
 - **Readable:** Your name choice should tell the story
 - **Maintainable:** Single responsibility makes changes safe
 - **Testable:** Small, focused functions are easier to verify
