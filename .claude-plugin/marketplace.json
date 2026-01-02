@@ -36,7 +36,7 @@
     {
       "name": "coder",
       "description": "Coder plugin For analyzing code quality and suggesting improvements",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "keywords": ["coder", "code quality", "suggestions"],
       "license": "MIT",
       "author": { "name": "acbcdev" },
