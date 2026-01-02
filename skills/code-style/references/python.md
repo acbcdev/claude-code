@@ -1,80 +1,49 @@
 ---
 name: Python Code Style Reference
-description: Language-specific style guidelines, patterns, and Pythonic best practices for Python projects.
+description: Language-specific style guidelines for Python projects.
 ---
 
 # Python Style Guide
 
-This guide complements the main code-style skill with Python-specific patterns, Pythonic idioms, and conventions. Follow these guidelines alongside the universal principles in the main skill.
-
-Reference: [PEP 8 - Style Guide for Python Code](https://pep8.org/) and [PEP 20 - The Zen of Python](https://www.python.org/dev/peps/pep-0020/)
-
----
+Reference: [PEP 8](https://pep8.org/) and [PEP 20 - Zen of Python](https://www.python.org/dev/peps/pep-0020/)
 
 ## Naming Conventions
 
-Python uses `snake_case` for functions/variables, `PascalCase` for classes.
+- **Use `snake_case`** for functions, variables, constants
+- **Use `PascalCase`** for classes
+- **Prefix booleans** with `is_`, `has_`, `can_`, `should_`, `does_`
+- **Use `UPPER_CASE`** for module-level constants
+- **DO NOT use camelCase** - not Pythonic
 
 ```python
 def calculate_total(items):      # Good: snake_case
-    return sum(item.price for item in items)
+    pass
 
 user_name = "Alice"              # Good: snake_case
 is_active = True                 # Good: boolean prefix
-max_retries = 3
-
 MAX_RETRIES = 3                  # Good: constant
-API_TIMEOUT_SECONDS = 30         # Good: constant
 
-def _internal_helper():          # Good: private convention
+class User:                       # Good: PascalCase
     pass
 
-class User:
-    def __init__(self):
-        self.__password = None   # Good: name mangling
-
-# Bad: camelCase (not Pythonic)
-def calculateTotal(items): pass
-userName = "Alice"
-valid = True                     # Bad: unclear intent
-
-# Boolean prefixes: is_, has_, can_, should_, does_
+def calculateTotal():            # Bad: camelCase
+    pass
 ```
-
----
 
 ## Pythonic Idioms
 
-### Comprehensions Over Loops
+- **PREFER comprehensions** - `[x*2 for x in list]`
+- **PREFER EAFP over LBYK** - use try/except instead of checking conditions
+- **Use context managers** - `with open(file) as f:`
+- **Use f-strings** - `f"Hello, {name}!"`
+- **DO NOT use string concatenation** with `+`
 
 ```python
-doubled = [n * 2 for n in numbers]           # Good: list
-evens = [n for n in numbers if n % 2 == 0]  # Good: list with filter
-inverted = {v: k for k, v in data.items()}   # Good: dict
-unique_squares = {n * n for n in numbers}    # Good: set
+# Good: comprehensions
+doubled = [n * 2 for n in numbers]
+evens = [n for n in numbers if n % 2 == 0]
+inverted = {v: k for k, v in data.items()}
 
-# OK: for loop when comprehension is complex
-results = []
-for item in items:
-    if should_process(item):
-        processed = expensive_transform(item)
-        if processed:
-            results.append(processed)
-
-# Bad: nested comprehension (hard to read)
-nested = [[j * 2 for j in range(i)] for i in range(5)]
-
-# Better: use loop for clarity
-nested = []
-for i in range(5):
-    nested.append([j * 2 for j in range(i)])
-```
-
-### EAFP Over LBYK
-
-Use try/except instead of checking conditions (Easier to Ask for Forgiveness than Permission).
-
-```python
 # Good: EAFP
 try:
     value = data['key']
@@ -87,24 +56,33 @@ if 'key' in data:
 else:
     value = None
 
-# Good: EAFP for operations
-try:
-    result = int(user_input)
-except ValueError:
-    result = 0
+# Good: context manager
+with open('data.txt') as f:
+    content = f.read()
 
-# Good: Use .get() for simple cases
+# Good: f-strings
+greeting = f"Hello, {name}!"
+message = f"Price: ${price:.2f}"
+
+# Bad: string concatenation
+greeting = "Hello, " + name + "!"
+
+# OK: .get() for simple cases
 value = data.get('key', 'default')
 ```
 
-### Context Managers (`with` Statements)
+## Context Managers
+
+- **Use `with` statements** for automatic cleanup
+- **Use custom context managers** for setup/teardown logic
+- **DO NOT manually close resources** - error-prone
 
 ```python
 # Good: automatic cleanup
 with open('data.txt') as f:
     content = f.read()
 
-# Good: multiple context managers
+# Good: multiple resources
 with open('input.txt') as src, open('output.txt', 'w') as dst:
     for line in src:
         dst.write(line.upper())
@@ -124,56 +102,19 @@ def timer(name):
 with timer("operation"):
     expensive_computation()
 
-# Bad: manual cleanup (error-prone)
+# Bad: manual cleanup
 f = open('data.txt')
 content = f.read()
 f.close()  # might not run if exception occurs
 ```
 
-### f-Strings
+## Type Hints
 
-```python
-# Good: f-strings
-greeting = f"Hello, {name}!"
-message = f"{name} is {age} years old"
-
-# Good: f-string expressions and formatting
-message = f"Price: ${price:.2f}"
-message = f"Total items: {len(items)}"
-
-# OK: .format() for older Python
-message = "Hello, {}!".format(name)
-
-# Bad: concatenation or % formatting
-message = "Hello, " + name + "!"
-message = "Hello, %s!" % name
-```
-
-### Magic Strings/Numbers
-
-```python
-# Good: named constants
-REDIS_HOST = "localhost"
-REDIS_PORT = 6379
-MAX_CONNECTIONS = 10
-CACHE_TTL_SECONDS = 3600
-
-def connect_redis():
-    return redis.Redis(host=REDIS_HOST, port=REDIS_PORT)
-
-# Bad: magic values
-def connect_redis():
-    return redis.Redis(host="localhost", port=6379)
-
-def cache_result(key, value):
-    cache.set(key, value, 3600)  # unclear
-```
-
----
-
-## Type Hints and Annotations
-
-### Type Hints
+- **Add type hints** for clarity and static analysis
+- **Annotate function parameters and returns**
+- **Use specific types**, not generic containers
+- **PREFER `|` for unions** (Python 3.10+)
+- **DO NOT use `any`** - use specific types or `unknown`
 
 ```python
 # Good: function hints
@@ -192,46 +133,32 @@ def process_data(data: dict[str, list[int]]) -> None:
 count: int = 0
 user_names: list[str] = []
 
-# Python 3.10+: union types
+# Good: union types (Python 3.10+)
 def process(value: int | str) -> None:
     pass
 
-# Pre-3.10: use Union from typing
+# Pre-3.10: use Union
 from typing import Union
 def process(value: Union[int, str]) -> None:
     pass
-```
 
-### Protocol for Structural Typing
-
-```python
+# Good: Protocol for interfaces (no inheritance needed)
 from typing import Protocol
 
-# Good: Protocol defines interface
 class Drawable(Protocol):
     def draw(self) -> None: ...
 
 def render(shape: Drawable) -> None:
     shape.draw()
-
-# Works with any class that has draw()
-class Circle:
-    def draw(self):
-        print("Drawing circle")
-
-class Square:
-    def draw(self):
-        print("Drawing square")
-
-render(Circle())   # Works without inheritance
-render(Square())
 ```
-
----
 
 ## Exception Handling
 
-### Specific Exception Handling
+- **Catch specific exceptions**, not broad `Exception`
+- **DO NOT catch `BaseException`** - catches KeyboardInterrupt, SystemExit
+- **Define custom exceptions** for your domain
+- **DO NOT silently swallow errors** - log or rethrow
+- **Only catch errors you can handle** - let others propagate
 
 ```python
 # Good: specific exceptions
@@ -246,13 +173,29 @@ def parse_config(filepath):
         print(f"Invalid JSON: {e}")
         return {}
 
-# Good: re-raise if you can't handle
-def fetch_user(user_id):
-    try:
-        return api.get(f"/users/{user_id}")
-    except ConnectionError:
-        retry_logic()
-    # ValueError propagates
+# Good: custom exceptions
+class ValidationError(Exception):
+    """Data validation failed."""
+    pass
+
+def get_user(user_id):
+    if not user_id:
+        raise ValidationError("user_id required")
+    user = db.find(user_id)
+    if not user:
+        raise UserNotFoundError(f"User {user_id} not found")
+    return user
+
+# Good: exception hierarchy
+class ApiError(Exception):
+    """Base for API errors."""
+    pass
+
+class BadRequestError(ApiError):
+    pass
+
+class NotFoundError(ApiError):
+    pass
 
 # Bad: catch-all
 try:
@@ -265,57 +208,27 @@ try:
     operation()
 except BaseException:  # catches KeyboardInterrupt!
     pass
+
+# Bad: silent errors
+def process_item(item):
+    try:
+        return transform(item)
+    except Exception:
+        pass  # what went wrong?
 ```
-
-### Custom Exceptions
-
-```python
-# Good: custom exceptions
-class ValidationError(Exception):
-    """Data validation failed."""
-    pass
-
-class UserNotFoundError(Exception):
-    """User not found."""
-    pass
-
-# Good: use specifically
-def get_user(user_id):
-    if not user_id:
-        raise ValidationError("user_id required")
-
-    user = db.find(user_id)
-    if not user:
-        raise UserNotFoundError(f"User {user_id} not found")
-    return user
-
-# Good: exception hierarchy
-class ApiError(Exception):
-    """Base for API errors."""
-    pass
-
-class BadRequestError(ApiError):
-    """400 Bad Request."""
-    pass
-
-class NotFoundError(ApiError):
-    """404 Not Found."""
-    pass
-```
-
----
 
 ## Code Organization
 
-### Code Organization
+- **Module docstring at top** explaining purpose
+- **Organize imports:** stdlib, third-party, local
+- **DO NOT use wildcard imports** - unclear what's available
+- **Group related functions and classes**
 
 ```python
-# Good: module docstring
 """
 User management module.
 
-Provides functions for creating, updating, deleting users,
-and user authentication.
+Provides functions for user CRUD operations and authentication.
 """
 
 import os
@@ -330,17 +243,18 @@ from myapp.models import User
 from myapp.utils import validate_email
 
 # Bad: wildcard imports
-from myapp.utils import *  # unclear what's imported
+from myapp.utils import *  # unclear
 ```
 
----
+## Anti-Patterns to Avoid
 
-## Common Pitfalls
-
-### Mutable Default Arguments
+- **Mutable default arguments** - persist across calls
+- **Side effects in properties** - use explicit methods
+- **List comprehensions too complex** - use loops for readability
+- **Magic numbers/strings** - extract to named constants
 
 ```python
-# Bad: mutable default persists across calls
+# Bad: mutable default
 def add_user(name, user_list=[]):
     user_list.append(name)
     return user_list
@@ -354,11 +268,7 @@ def add_user(name, user_list=None):
         user_list = []
     user_list.append(name)
     return user_list
-```
 
-### Side Effects in Properties
-
-```python
 # Bad: property with side effect
 class User:
     @property
@@ -375,54 +285,35 @@ class User:
     def get_data_with_logging(self):
         self.log_access()
         return self._data
+
+# Bad: nested comprehension (hard to read)
+nested = [[j * 2 for j in range(i)] for i in range(5)]
+
+# Good: use loop for clarity
+nested = []
+for i in range(5):
+    nested.append([j * 2 for j in range(i)])
+
+# Bad: magic values
+REDIS_HOST = "localhost"
+REDIS_PORT = 6379
+
+def connect_redis():
+    return redis.Redis(host="localhost", port=6379)  # Bad: magic values
+
+# Good: named constants
+REDIS_HOST = "localhost"
+REDIS_PORT = 6379
+def connect_redis():
+    return redis.Redis(host=REDIS_HOST, port=REDIS_PORT)
 ```
 
-### Silent Failures
+## Quick Reference
 
-```python
-# Bad: silent
-def process_item(item):
-    try:
-        return transform(item)
-    except Exception:
-        pass  # what went wrong?
-
-# Good: log or handle
-def process_item(item):
-    try:
-        return transform(item)
-    except ValueError as e:
-        logger.warning(f"Invalid: {e}")
-        return None
-    except Exception as e:
-        logger.error(f"Error: {e}")
-        raise
-```
-
-### `__slots__` for Performance
-
-```python
-# Good: __slots__ reduces memory in tight loops
-class Point:
-    __slots__ = ['x', 'y']
-
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-
-# Less efficient: dynamic __dict__ (default)
-class Point:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-```
-
----
-
-## Summary
-
-Pythonic code is readable, explicit, and idiomatic:
-- Use comprehensions, context managers, EAFP
+- Use `snake_case` for functions/variables, `PascalCase` for classes
+- Prefer comprehensions, EAFP, context managers, f-strings
 - Add type hints for clarity
-- Follow PEP 8 and PEP 20
-- Small, focused functions
+- Catch specific exceptions; no silent failures
+- Avoid mutable defaults, side effects in properties, wildcard imports
+- Extract magic values to named constants
+- Follow PEP 8 and Zen of Python
