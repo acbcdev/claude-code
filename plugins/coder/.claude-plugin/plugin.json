@@ -1,0 +1,6 @@
+{
+  "name": "coder",
+  "description": "Coder plugin For analyzing code quality and suggesting improvements",
+  "author": { "name": "acbcdev" },
+  "version": "1.0.1"
+}

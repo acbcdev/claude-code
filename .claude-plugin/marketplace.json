@@ -13,37 +13,26 @@
     {
       "name": "git-master",
       "description": "Git plugin For managing git repositories Changelog",
+      "author": { "name": "acbcdev" },
       "version": "1.0.3",
       "keywords": ["git", "changelog", "version", "release"],
       "license": "MIT",
-      "author": { "name": "acbcdev" },
       "category": "git",
       "strict": false,
-
       "repository": "https://github.com/acbcdev/claude-code",
-      "source": {
-        "source": "github",
-        "repo": "acbcdev/claude-code"
-      },
-      "agents": [
-        "./agents/commit-generator.md",
-        "./agents/git-branch-manager.md",
-        "./agents/changelog-manager.md"
-      ],
-      "commands": ["./commands/commit.md"],
-      "skills": ["./skills/commiter/"]
+      "source": "./plugins/git-master"
     },
     {
       "name": "coder",
       "description": "Coder plugin For analyzing code quality and suggesting improvements",
+      "author": { "name": "acbcdev" },
       "version": "1.0.1",
       "keywords": ["coder", "code quality", "suggestions"],
       "license": "MIT",
-      "author": { "name": "acbcdev" },
       "category": "coder style analyzer",
       "strict": false,
       "repository": "https://github.com/acbcdev/claude-code",
-      "skills": ["./skills/coder/"]
+      "source": "./plugins/coder"
     }
   ]
 }
