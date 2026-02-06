@@ -33,6 +33,18 @@
       "strict": false,
       "repository": "https://github.com/acbcdev/claude-code",
       "source": "./plugins/coder"
+    },
+    {
+      "name": "screaming-architecture",
+      "description": "Screaming Architecture plugin For analyzing software architecture and suggesting improvements",
+      "author": { "name": "acbcdev" },
+      "version": "1.0.0",
+      "keywords": ["architecture", "software design", "improvements"],
+      "license": "MIT",
+      "category": "architecture analyzer",
+      "strict": false,
+      "repository": "https://github.com/acbcdev/claude-code",
+      "source": "./plugins/screaming-architecture"
     }
   ]
 }

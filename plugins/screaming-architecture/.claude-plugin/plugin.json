@@ -1,0 +1,6 @@
+{
+  "name": "screaming-architecture",
+  "description": "Screaming Architecture plugin For analyzing software architecture and suggesting improvements",
+  "author": { "name": "acbcdev" },
+  "version": "1.0.0"
+}
